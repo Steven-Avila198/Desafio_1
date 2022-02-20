@@ -1,0 +1,16 @@
+FUENTES:
+
+Paralelizacion: http://ferestrepoca.github.io/paradigmas-de-programacion/paralela/paralela_teoria/index.html
+
+Señal serial: http://www.itq.edu.mx/carreras/IngElectronica/archivos_contenido/Apuntes%20de%20materias/ETD1022_Microcontroladores/4_SerialCom.pdf
+              https://www.serial-port-monitor.org/es/articles/serial-communication/
+
+Señal de reloj: https://www.alegsa.com.ar/Dic/señal_de_reloj.php
+
+Bit: https://www.jvs-informatica.com/blog/glosario/bit/
+
+Byte: https://www.jvs-informatica.com/blog/glosario/bit/
+
+Compuertas logicas: https://www.logicbus.com.mx/compuertas-logicas.php
+
+Codficar: https://www.glosarioit.com/Codificación
