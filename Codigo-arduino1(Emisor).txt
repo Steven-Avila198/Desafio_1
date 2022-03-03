@@ -1,0 +1,69 @@
+///// Codigo arduino #1////////
+#include <SoftwareSerial.h>
+SoftwareSerial otro(10,9);//10 es RX,9 es TX
+int SER = 11; // pin 11 a SER del 74HC595
+int RCLK= 12;		// pin 12 a RCLK del 74HC595
+int SRCLK = 13;		// pin 13 a SRCLK del 74HC595
+int comas=0;
+
+
+void setup ()
+{
+  pinMode(SER, OUTPUT);		// pin establecido como salida
+  pinMode(RCLK, OUTPUT);	// pin establecido como salida
+  pinMode(SRCLK, OUTPUT);	// pin establecido como salida
+  Serial.begin(9600);
+  otro.begin(2400);
+}
+ 
+void loop() {
+  
+  if (Serial.available()) //disponibilidad de serial
+   {
+      String data = Serial.readStringUntil('\n'); //la entrada la recibimos como string
+      Serial.println(data);
+   
+     for (byte j=1;j<=data.length();j++)
+      {
+        if(data[j]==',')
+        {
+          comas++;
+        }
+      }
+     int datos=comas+1;
+    char buf[datos];
+  	 int values[datos];  // Una forma más "compacta" de crear seis variables.
+ 	 int prevPos = data.indexOf(',');  // Buscar la posición de la primera coma en la cadena
+	 values[0]= data.substring(0, prevPos).toInt(); // Extraer la primera cadena de caracteres (sin coma)
+ 	 prevPos++;
+     byte currPos = data.indexOf(',', prevPos);
+     
+     for (byte i = 1; i < datos; i++) 
+     {
+   		 values[i] = data.substring(prevPos, currPos).toInt(); // Extrae la subcadena que contiene un número, luego se convierte en un valor
+                                                          // númerico de variable.
+    	 prevPos = currPos + 1;                                // Como ahora trabajamos con dos posiciones y necesitamos pasar a la siguiente
+                                                          // subcadena, la "posición actual" ahora es la anterior. No olvidemos el
+                                                          // desplazamiento de índice.
+    	currPos = data.indexOf(',', prevPos);                 // La "posición actual" ahora es la próxima ocurrencia del "caracter separador"
+                                                          // (en este caso, una coma).
+  	}
+     otro.write(datos);
+    delay(200);
+     for (byte i = 0; i < datos; i++) {                          // Imprime el valor de las seis variables extraídas del texto de prueba.
+    Serial.println(String(values[i]));
+    
+    otro.write(values[i]);
+    
+  	}
+    
+    
+    for(int i=0;i<datos;i++){
+  digitalWrite(RCLK, LOW);		// nivel bajo a registro de almacenamiento
+  shiftOut(SER, SRCLK, MSBFIRST, values[i]);	// funcion para enviar de forma serie el valor de i
+  digitalWrite(RCLK, HIGH);		// nivel alto a registro de almacenamiento
+  delay(200);				// demora de medio segundo
+    }
+   }
+ 
+}

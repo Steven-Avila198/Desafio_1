@@ -1,0 +1,76 @@
+/////////// Codigo Arduino #2///////////
+
+#include <SoftwareSerial.h>
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(7,6,5,4,3,2);
+// Declaro un nuevo puerto para la comunicación serie
+SoftwareSerial otro(10, 9); // RX, TX
+const int  buttonPin = 8;       
+int ban=0;
+int datos=1;
+int buttonState = 0;          
+int num[80];
+int i=0;
+int j=0;
+int k=0;
+int posicion[30];
+int contador=0;
+void setup() {
+  
+  pinMode(buttonPin, INPUT);
+  Serial.begin(9600);
+  otro.begin(2400); 
+  num[0]=1;
+  lcd.begin(16,2);
+}
+
+
+void loop() {
+   
+   if (otro.available()) {
+    
+    int inByte = otro.read();    
+    num[i]=inByte;
+    Serial.println(num[i]);
+    i++;
+    
+     delay(200);
+  buttonState = digitalRead(buttonPin);
+     
+     if (buttonState == HIGH) {     
+      
+      contador++;
+       ban++;      
+    } 
+ 	else{      
+      contador++;      
+    }
+     
+    if(ban==2)
+    {
+      if(num[contador-1]==num[contador-2])
+      {        
+        posicion[j]=contador;
+        j++;    
+      }
+      else
+      {        
+      }
+      ban=0;
+    }
+  }  
+  if(contador-1==num[0]){
+    Serial.print("mensaje verdadero: ");
+    lcd.setCursor(0,0);
+    lcd.print("  Mensaje Real");
+    lcd.setCursor(0,1);
+    for(int k=0;k<j;k++){
+      
+  	  Serial.println(num[posicion[k]]);
+      lcd.print(num[posicion[k]]);
+      lcd.print(" ");
+    }
+    contador=0;
+  }
+    
+}
